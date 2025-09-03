@@ -23,6 +23,7 @@ end
 
 function Edit(...)
   local Args = {...}
+  GetResult(100)
   gg.editAll(Args[1], Args[2] or BYTE)
 end
 
