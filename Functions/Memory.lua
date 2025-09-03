@@ -10,6 +10,7 @@ SIGNED_DWORD  = gg.TYPE_SIGNED_DWORD  -- signed 4 byte
 SIGNED_QWORD  = gg.TYPE_SIGNED_QWORD  -- signed 8 byte
 EQUAL         = gg.SIGN_EQUAL         -- equal
 AUTO          = gg.TYPE_AUTO        -- auto
+gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_CODE_APP)
 
 function Search(...)
   local Args = {...}
