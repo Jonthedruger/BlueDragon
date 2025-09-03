@@ -13,5 +13,6 @@ AUTO          = gg.TYPE_AUTO        -- auto
 
 function Search(...)
   local Args = {...}
-  gg.searchNumber(Args[1],Args[2] or AUTO,
-  
+  gg.searchNumber(Args[1], Args[2] or AUTO, EQUAL)
+  return true -- ts was NOT necessary twin
+end
