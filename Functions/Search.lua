@@ -13,6 +13,22 @@ AUTO          = gg.TYPE_AUTO        -- auto
 
 function Search(...)
   local Args = {...}
-  gg.searchNumber(Args[1], Args[2] or AUTO, EQUAL)
+  gg.searchNumber(Args[1], Args[2] or AUTO, false, EQUAL, 0, -1)
   return true -- ts was NOT necessary twin
+end
+
+function GetResult(Value)
+    gg.getResults(Value)
+  return true
+end
+
+function Edit(...)
+  local Args = {...}
+  gg.editAll(Args[1], Args[2] or BYTE)
+  return true
+end
+
+function Clear()
+  gg.clearResults()
+  gg.setVisible(false)
 end
