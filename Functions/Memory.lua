@@ -1,34 +1,37 @@
-BYTE          = gg.TYPE_BYTE        -- 1 byte integer
-WORD          = gg.TYPE_WORD        -- 2 byte integer
-DWORD         = gg.TYPE_DWORD       -- 4 byte integer
-QWORD         = gg.TYPE_QWORD       -- 8 byte integer
-FLOAT         = gg.TYPE_FLOAT       -- 4 byte float
-DOUBLE        = gg.TYPE_DOUBLE      -- 8 byte double
-SIGNED_BYTE   = gg.TYPE_SIGNED_BYTE   -- signed 1 byte
-SIGNED_WORD   = gg.TYPE_SIGNED_WORD   -- signed 2 byte
-SIGNED_DWORD  = gg.TYPE_SIGNED_DWORD  -- signed 4 byte
-SIGNED_QWORD  = gg.TYPE_SIGNED_QWORD  -- signed 8 byte
-EQUAL         = gg.SIGN_EQUAL         -- equal
-AUTO          = gg.TYPE_AUTO        -- auto
+local Memory = {}
+
+Memory.BYTE          = gg.TYPE_BYTE
+Memory.WORD          = gg.TYPE_WORD
+Memory.DWORD         = gg.TYPE_DWORD
+Memory.QWORD         = gg.TYPE_QWORD
+Memory.FLOAT         = gg.TYPE_FLOAT
+Memory.DOUBLE        = gg.TYPE_DOUBLE
+Memory.SIGNED_BYTE   = gg.TYPE_SIGNED_BYTE
+Memory.SIGNED_WORD   = gg.TYPE_SIGNED_WORD
+Memory.SIGNED_DWORD  = gg.TYPE_SIGNED_DWORD
+Memory.SIGNED_QWORD  = gg.TYPE_SIGNED_QWORD
+Memory.EQUAL         = gg.SIGN_EQUAL
+Memory.AUTO          = gg.TYPE_AUTO
+
 gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_CODE_APP)
 
-function Search(...)
-  local Args = {...}
-  gg.searchNumber(Args[1], Args[2] or AUTO, false, EQUAL, 0, -1)
+function Memory.Search(value, type)
+    gg.searchNumber(value, type or Memory.AUTO, false, Memory.EQUAL, 0, -1)
 end
 
-function GetResult(Value)
-    gg.getResults(Value)
+function Memory.GetResults(count)
+    return gg.getResults(count or 100)
 end
 
-function Clear()
-  gg.clearResults()
-  gg.setVisible(false)
+function Memory.Clear()
+    gg.clearResults()
+    gg.setVisible(false)
 end
 
-function Edit(...)
-  local Args = {...}
-  GetResult(100)
-  gg.editAll(Args[1], Args[2] or BYTE)
-  Clear()
+function Memory.Edit(value, type)
+    local results = Memory.GetResults()
+    gg.editAll(value, type or Memory.BYTE)
+    Memory.Clear()
 end
+
+return Memory
