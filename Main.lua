@@ -1,6 +1,8 @@
-local Memory  = require('./Functions/Memory.lua')
-local Values  = require('./Modules/Values.lua')
-local Version = require('./Modules/Version')
+local Repo    = 'https://raw.githubusercontent.com/Jonthedruger/BlueDragon'
+local Main    = Repo .. 'refs/heads/main/'
+local Memory  = load(gg.makeRequest(Main .. 'Functions/Memory.lua'))
+local Values  = load(gg.makeRequest(Main .. 'Modules/Values.lua'))
+local Version = load(gg.makeRequest(Main .. 'Modules/Version'))
 
 local function Menu()
   local Menu = {
