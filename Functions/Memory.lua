@@ -21,13 +21,14 @@ function GetResult(Value)
     gg.getResults(Value)
 end
 
+function Clear()
+  gg.clearResults()
+  gg.setVisible(false)
+end
+
 function Edit(...)
   local Args = {...}
   GetResult(100)
   gg.editAll(Args[1], Args[2] or BYTE)
-end
-
-function Clear()
-  gg.clearResults()
-  gg.setVisible(false)
+  Clear()
 end
