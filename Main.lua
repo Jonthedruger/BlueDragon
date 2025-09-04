@@ -12,13 +12,12 @@ local function Menu()
         'Antenna'
     }
     
-    
-local Changelogs = "\n--- ChangeLogs ---\n"
-for ver, log in pairs(Version) do
-    Changelogs = Changelogs .. ver .. " : " .. log .. "\n"
-end
+    local Changelogs = "\n=== ChangeLogs ===\n"
+    for ver, log in pairs(Version) do
+      Changelogs = Changelogs .. ver .. " : " .. log .. "\n"
+    end
 
-local Args = gg.multiChoice(Menu, nil, [==[
+    local Args = gg.multiChoice(Menu, nil, [==[
        
       ╭╮╱╱╱╱╱╱╱╱╱╱╱╭╮╱╱╱╭╮
       ┃┃╱╱╱╱╱╱╱╱╱╱╱┃┃╱╱╱┃┃
@@ -33,7 +32,7 @@ local Args = gg.multiChoice(Menu, nil, [==[
       Discord : @liebertsx  
       Telegram: @liebertsx  
       ====================
-]==] .. Changelogs)
+        ]==] .. Changelogs)
     
     if not Args then return end
     if Args[1] then
