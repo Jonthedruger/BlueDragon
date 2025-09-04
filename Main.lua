@@ -12,20 +12,28 @@ local function Menu()
         'Antenna'
     }
     
-    local Args = gg.multiChoice(Menu, nil, [==[
+    
+local Changelogs = "\n--- ChangeLogs ---\n"
+for ver, log in pairs(Version) do
+    Changelogs = Changelogs .. ver .. " : " .. log .. "\n"
+end
 
-╭╮╱╱╱╱╱╱╱╱╱╱╱╭╮╱╱╱╭╮
-┃┃╱╱╱╱╱╱╱╱╱╱╱┃┃╱╱╱┃┃
-┃┃╭╮╭┳━╮╭━━┳━┫┃╭━━┫┃
-┃┃┃┃┃┃╭╮┫╭╮┃╭┫┃┃╭╮┃┃
-┃╰┫╰╯┃┃┃┃╭╮┃┣┫╰┫╰╯┃╰╮
-╰━┻━━┻╯╰┻╯╰┻┻┻━┻━━┻━╯
+local Args = gg.multiChoice(Menu, nil, [==[
+       
+      ╭╮╱╱╱╱╱╱╱╱╱╱╱╭╮╱╱╱╭╮
+      ┃┃╱╱╱╱╱╱╱╱╱╱╱┃┃╱╱╱┃┃
+      ┃┃╭╮╭┳━╮╭━━┳━┫┃╭━━┫┃
+      ┃┃┃┃┃┃╭╮┫╭╮┃╭┫┃┃╭╮┃┃
+      ┃╰┫╰╯┃┃┃┃╭╮┃┣┫╰┫╰╯┃╰╮
+      ╰━┻━━┻╯╰┻╯╰┻┻┻━┻━━┻━╯
         - Information 
-This script was made by liebertsx. Thanks for using my script
+      This script was made by liebertsx. Thanks for using my script
 
-Discord: @liebertsx  
-Telegram: @liebertsx
-]==])
+      ===== Contant  =====
+      Discord : @liebertsx  
+      Telegram: @liebertsx  
+      ====================
+]==] .. Changelogs)
     
     if not Args then return end
     if Args[1] then
