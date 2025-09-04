@@ -43,7 +43,9 @@ function Memory.SetRanges(Ranges)
     gg.setRanges(Ranges)
 end
 
-Memory.SetRanges(Memory.Anonymous | Memory.CodeApp)
+function Memory.SetValues(...)
+	gg.setValues(...)
+end
 
 function Memory.Search(Value, Type)
     gg.searchNumber(Value, Type or Memory.Auto, false, Memory.Equal, 0, -1)
