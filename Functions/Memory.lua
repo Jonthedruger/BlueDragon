@@ -35,8 +35,6 @@ Memory.SignedQword  = gg.TYPE_SIGNED_QWORD
 Memory.Equal        = gg.SIGN_EQUAL
 --//
 
-gg.setRanges(Memory.Anonymous | Memory.CodeApp)
-
 local Lib name = nil;
 local StartAddr = 0;
 local EndAddr = 0;
@@ -44,6 +42,8 @@ local EndAddr = 0;
 function Memory.SetRanges(Ranges)
     gg.setRanges(Ranges)
 end
+
+Memory.SetRanges(Memory.Anonymous | Memory.CodeApp)
 
 function Memory.Search(Value, Type)
     gg.searchNumber(Value, Type or Memory.Auto, false, Memory.Equal, 0, -1)
