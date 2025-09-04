@@ -1,2 +1,2 @@
-# BlueDragon
-a free fire scripts for game guardian
+## *Lunar.lol*
+a Free *Free Fire* scripts for *GameGuardian*
