@@ -1,4 +1,4 @@
-local Repo = 'https://raw.githubusercontent.com/Jonthedruger/BlueDragon'
+local Repo = 'https://raw.githubusercontent.com/Jonthedruger/lunar.lol'
 local Main = Repo .. '/main/'
 local Memory = load(gg.makeRequest(Main .. 'Functions/Memory.lua').content)()
 local Values = load(gg.makeRequest(Main .. 'Modules/Values.lua').content)()
