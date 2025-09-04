@@ -30,6 +30,12 @@ Telegram: @liebertsx
         Memory.Edit(Values['Fast Switch'].R2, Memory.Byte)
     elseif Args[3] then
         Memory.Search(Values.Antenna.S, Memory.Float)
+        Memory.Search(0, Memory.Float)
+        for i,v in ipairs(Results) do
+            v.value = Values.Antenna.R
+            v.freeze = true
+        end
+        gg.setValues(Results)
         Memory.Edit(Values.Antenna.R, Memory.Float)
     end
 end
