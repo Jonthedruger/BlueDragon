@@ -44,24 +44,29 @@ local function Menu()
         Memory.Search(Values['Fast Switch'].S2, Memory.Byte)
         Memory.Edit(Values['Fast Switch'].R2, Memory.Byte)
     elseif Args[3] then
-        Memory.Search(Values.Antenna.S, Memory.Float)
-        Memory.Search(0, Memory.Float)
-        local Results = Memory.GetResults()
-        for i,v in ipairs(Results) do
+    Memory.Search(Values.Antenna.S, Memory.Float)
+    Memory.Search(0, Memory.Float)
+    local Results = Memory.GetResults(1000)
+    if #Results > 0 then
+        for i, v in ipairs(Results) do
             v.value = Values.Antenna.R
-            v.freeze = true
+            v.freeze = false
         end
         Memory.SetValues(Results)
-        Memory.Clear()
-        Memory.Search(Values.Antenna.S2, Memory.Float)
-        Memory.Search(0, Memory.Float)
-        local Results2 = Memory.GetResults()
-        for k,x in ipairs(Results2) do
-            x.value = Values.Antenna.R
-            v.freeze = true
+    end
+    Memory.Clear()
+    
+    Memory.Search(Values.Antenna.S2, Memory.Float)
+    Memory.Search(0, Memory.Float)
+    local Results2 = Memory.GetResults(1000)
+    if #Results2 > 0 then
+        for i, v in ipairs(Results2) do
+            v.value = Values.Antenna.R
+            v.freeze = false
         end
         Memory.SetValues(Results2)
-        Memory.Clear()
+    end
+    Memory.Clear()
     end
 end
 
