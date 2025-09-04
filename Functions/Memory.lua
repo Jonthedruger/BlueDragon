@@ -1,26 +1,56 @@
 local Memory = {}
 
-Memory.BYTE          = gg.TYPE_BYTE
-Memory.WORD          = gg.TYPE_WORD
-Memory.DWORD         = gg.TYPE_DWORD
-Memory.QWORD         = gg.TYPE_QWORD
-Memory.FLOAT         = gg.TYPE_FLOAT
-Memory.DOUBLE        = gg.TYPE_DOUBLE
-Memory.SIGNED_BYTE   = gg.TYPE_SIGNED_BYTE
-Memory.SIGNED_WORD   = gg.TYPE_SIGNED_WORD
-Memory.SIGNED_DWORD  = gg.TYPE_SIGNED_DWORD
-Memory.SIGNED_QWORD  = gg.TYPE_SIGNED_QWORD
-Memory.EQUAL         = gg.SIGN_EQUAL
-Memory.AUTO          = gg.TYPE_AUTO
+--// Memory Types
+Memory.Byte         = gg.TYPE_BYTE
+Memory.Word         = gg.TYPE_WORD
+Memory.Dword        = gg.TYPE_DWORD
+Memory.Qword        = gg.TYPE_QWORD
+Memory.Float        = gg.TYPE_FLOAT
+Memory.Double       = gg.TYPE_DOUBLE
+Memory.Auto         = gg.TYPE_AUTO
+--//
 
-gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_CODE_APP)
+--// Memory Regions
+Memory.Anonymous    = gg.REGION_ANONYMOUS
+Memory.CAlloc       = gg.REGION_C_ALLOC
+Memory.CBss         = gg.REGION_C_BSS
+Memory.CData        = gg.REGION_C_DATA
+Memory.CHeap        = gg.REGION_C_HEAP
+Memory.CodeApp      = gg.REGION_CODE_APP
+Memory.CodeSys      = gg.REGION_CODE_SYS
+Memory.Java         = gg.REGION_JAVA
+Memory.Ashmem       = gg.REGION_ASHMEM
+Memory.Stack        = gg.REGION_STACK
+Memory.Other        = gg.REGION_OTHER
+Memory.Bad          = gg.REGION_BAD
+Memory.Xa           = gg.REGION_XA
+Memory.Xs           = gg.REGION_XS
+--//
 
-function Memory.Search(value, type)
-    gg.searchNumber(value, type or Memory.AUTO, false, Memory.EQUAL, 0, -1)
+--// Memory Signs
+Memory.SignedByte   = gg.TYPE_SIGNED_BYTE
+Memory.SignedWord   = gg.TYPE_SIGNED_WORD
+Memory.SignedDword  = gg.TYPE_SIGNED_DWORD
+Memory.SignedQword  = gg.TYPE_SIGNED_QWORD
+Memory.Equal        = gg.SIGN_EQUAL
+--//
+
+gg.setRanges(Memory.Anonymous | Memory.CodeApp)
+
+local Lib name = nil;
+local StartAddr = 0;
+local EndAddr = 0;
+
+function Memory.SetRanges(Ranges)
+    gg.setRanges(Ranges)
 end
 
-function Memory.GetResults(count)
-    return gg.getResults(count or 100)
+function Memory.Search(Value, Type)
+    gg.searchNumber(Value, Type or Memory.Auto, false, Memory.Equal, 0, -1)
+end
+
+function Memory.GetResults(Count)
+    return gg.getResults(Count or 100)
 end
 
 function Memory.Clear()
@@ -28,10 +58,43 @@ function Memory.Clear()
     gg.setVisible(false)
 end
 
-function Memory.Edit(value, type)
-    local results = Memory.GetResults()
-    gg.editAll(value, type or Memory.BYTE)
+function Memory.Edit(Value, Type)
+    local Results = Memory.GetResults()
+    gg.editAll(Value, Type or Memory.Byte)
     Memory.Clear()
+end
+
+function Memory.Patch(Lib,Offset,Value)
+    if LibName == Lib then
+        return StartAddr, EndAddr
+    end
+    
+    local Ranges = gg.getRangesList(Lib or 'libil2cpp.so')
+    
+    for i, v in ipairs(Ranges) do
+        if v.state == "Xa" then
+            StartAddr = v.start
+            EndAddr = Ranges[#Ranges]['end']
+            break
+        end
+    end
+    
+    local k,v = {}, 0
+    for x in string.gmatch(Value, "%S%S") do
+	    table.insert(k, {
+	        address = StartAddr + Offset + v,
+	        flags = Memory.Byte,
+	        value = x .. "r"
+	    })
+        v = v + 1 -- total 
+    end
+    local Patch = gg.setValues(k)
+    if type(Patch) ~= 'string' then
+        return true
+    else
+        gg.alert(Patch)
+        return false
+    end
 end
 
 return Memory
