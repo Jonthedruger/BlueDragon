@@ -11,11 +11,6 @@ local function Menu()
         'Fast Switch', 
         'Antenna'
     }
-    
-    local Changelogs = "\n=== ChangeLogs ===\n"
-    for ver, log in pairs(Version) do
-      Changelogs = Changelogs .. ver .. " : " .. log .. "\n"
-    end
 
     local Args = gg.multiChoice(Menu, nil, [==[
        
@@ -32,7 +27,7 @@ local function Menu()
       Discord : @liebertsx  
       Telegram: @liebertsx  
       ====================
-        ]==] .. Changelogs)
+        ]==])
     
     if not Args then return end
     if Args[1] then
