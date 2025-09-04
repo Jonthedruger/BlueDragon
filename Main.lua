@@ -36,7 +36,14 @@ Telegram: @liebertsx
             v.freeze = true
         end
         gg.setValues(Results)
-        Memory.Edit(Values.Antenna.R, Memory.Float)
+        Memory.Search(Values.Antenna.S2, Memory.Float)
+        Memory.Search(0, Memory.Float)
+        for k,x in ipairs(Results) do
+            x.value = Values.Antenna.R
+            v.freeze = true
+        end
+        gg.setValues(Results)
+        Memory.Clear()
     end
 end
 
