@@ -13,7 +13,14 @@ local function Menu()
     }
     
     local Args = gg.multiChoice(Menu, nil, [==[
-- Information
+
+╭╮╱╱╱╱╱╱╱╱╱╱╱╭╮╱╱╱╭╮
+┃┃╱╱╱╱╱╱╱╱╱╱╱┃┃╱╱╱┃┃
+┃┃╭╮╭┳━╮╭━━┳━┫┃╭━━┫┃
+┃┃┃┃┃┃╭╮┫╭╮┃╭┫┃┃╭╮┃┃
+┃╰┫╰╯┃┃┃┃╭╮┃┣┫╰┫╰╯┃╰╮
+╰━┻━━┻╯╰┻╯╰┻┻┻━┻━━┻━╯
+        - Information 
 This script was made by liebertsx. Thanks for using my script
 
 Discord: @liebertsx  
