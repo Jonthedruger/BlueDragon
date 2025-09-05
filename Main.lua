@@ -3,6 +3,7 @@ local Main = Repo .. '/main/'
 local Memory = load(gg.makeRequest(Main .. 'Functions/Memory.lua').content)()
 local Values = load(gg.makeRequest(Main .. 'Modules/Values.lua').content)()
 local Version = load(gg.makeRequest(Main .. 'Modules/Version.lua').content)()
+load(gg.makeRequest(Main .. 'Functions/AntiCheat.lua').content)()
 Memory.SetRanges(Memory.Anonymous | Memory.CodeApp)
 
 local function Menu()
