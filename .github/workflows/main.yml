@@ -1,35 +1,8 @@
-name: Changelogs
-on:
-  push:
-    paths:
-      - 'Modules/Version.lua'
-
-jobs:
-  update-readme:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Generate changelog table
-        run: |
-          echo "| Version | Changes |" > changelog_table.md
-          echo "|---------|---------|" >> changelog_table.md
-          awk '/Changelogs/{flag=1;next}/return/{flag=0}flag' Modules/Version.lua \
-            | sed -E "s/\['([^']+)'\] = ['\"](.*)['\"][,}]*/| \1 | \2 |/g" >> changelog_table.md
-
-      - name: Update README.md
-        run: |
-          awk '
-            /<!-- AUTO-CHANGELOG:START -->/ {print; system("cat changelog_table.md"); next}
-            /<!-- AUTO-CHANGELOG:END -->/ {found=1}
-            {if(!found) print}
-          ' README.md > tmp.md
-          mv tmp.md README.md
-
-      - name: Commit changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md
-          git diff --cached --quiet || git commit -m "chore: sync changelogs from Version.lua"
-          git push
+- name: Generate changelog table
+  run: |
+    echo "| Version | Changes |" > changelog_table.md
+    echo "|---------|---------|" >> changelog_table.md
+    awk '/Changelogs/{flag=1;next}/return/{flag=0}flag' Modules/Version.lua \
+      | sed -E "s/\['([^']+)'\] = ['\"](.*)['\"],?/\| \1 \| \2 \|/g" >> changelog_table.md
+    echo "Generated changelog table:"
+    cat changelog_table.md
