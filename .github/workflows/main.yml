@@ -15,7 +15,7 @@ jobs:
           echo "| Version | Changes |" > changelog_table.md
           echo "|---------|---------|" >> changelog_table.md
           awk '/Changelogs/{flag=1;next}/return/{flag=0}flag' Modules/Version.lua \
-            | sed -E "s/\['([^']+)'\] = '(.*)'/| \1 | \2 |/g" >> changelog_table.md
+            | sed -E "s/\['([^']+)'\] = ['\"](.*)['\"][,}]*/| \1 | \2 |/g" >> changelog_table.md
 
       - name: Update README.md
         run: |
