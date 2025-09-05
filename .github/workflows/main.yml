@@ -4,22 +4,43 @@ on:
     paths:
       - 'Modules/Version.lua'
 
+permissions:
+  contents: write
+
 jobs:
   update-readme:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo (full history)
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: true
 
       - name: Generate changelog table
         run: |
           echo "| Version | Changes |" > changelog_table.md
           echo "|---------|---------|" >> changelog_table.md
+          # extract lines between "Changelogs" and "return"
           awk '/Changelogs/{flag=1;next}/return/{flag=0}flag' Modules/Version.lua \
-            | sed -E "s/\['([^']+)'\] = ['\"](.*)['\"],?/\| \1 \| \2 \|/g" >> changelog_table.md
-          echo "Generated changelog table:"
+            | sed -E "s/^\s*\['([^']+)'\]\s*=\s*['\"](.*)['\"],?\s*$/| \1 | \2 |/g" >> changelog_table.md
+          echo "---- debug: generated changelog_table.md ----"
           cat changelog_table.md
+          echo "---- end debug ----"
 
-      - name: Update README.md
+      - name: Ensure README placeholder exists (for visibility only)
+        run: |
+          if ! grep -q "<!-- AUTO-CHANGELOG:START -->" README.md; then
+            echo "Placeholder not found in README.md — adding a minimal placeholder."
+            printf '\n## Changelogs\n<!-- AUTO-CHANGELOG:START -->\n(waiting for updates from workflow...)\n<!-- AUTO-CHANGELOG:END -->\n' >> README.md
+            git add README.md
+            git commit -m "chore: add changelog placeholder to README" || true
+            git push || true
+          else
+            echo "Placeholder present."
+          fi
+
+      - name: Update README.md (replace between markers)
         run: |
           awk '
             /<!-- AUTO-CHANGELOG:START -->/ {print; system("cat changelog_table.md"); next}
@@ -27,12 +48,45 @@ jobs:
             {if(!found) print}
           ' README.md > tmp.md
           mv tmp.md README.md
+          echo "Updated README.md with new changelog section:"
+          sed -n '/<!-- AUTO-CHANGELOG:START -->/,/<!-- AUTO-CHANGELOG:END -->/p' README.md || true
 
-      - name: Commit changes
+      - name: Commit & push changes (with rebase)
+        env:
+          GITHUB_MAIN_REF: main
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Stage changes
           git add README.md
-          git diff --cached --quiet || git commit -m "chore: sync changelogs from Version.lua"
-          git pull --rebase origin main
-          git push
+
+          # Only commit if there are staged changes
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "chore: sync changelogs from Version.lua"
+
+          # Make sure local branch is up-to-date before pushing
+          echo "Fetching & rebasing on origin/${GITHUB_MAIN_REF}..."
+          # if fetch/rebase fails, abort and surface error (so we can inspect)
+          git fetch origin ${GITHUB_MAIN_REF}
+          if ! git rebase origin/${GITHUB_MAIN_REF}; then
+            echo "Rebase failed — aborting rebase and failing the job so you can resolve manually."
+            git rebase --abort || true
+            git log -n 5 --oneline
+            exit 1
+          fi
+
+          # Push the rebased commit (fast-forward)
+          git push origin HEAD:${GITHUB_MAIN_REF}
+
+      - name: Show final status (for logs)
+        if: always()
+        run: |
+          echo "=== git status ==="
+          git status --short --branch || true
+          echo "=== recent commits ==="
+          git --no-pager log -n 5 --oneline || true
