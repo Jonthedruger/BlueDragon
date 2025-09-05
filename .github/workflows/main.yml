@@ -23,7 +23,10 @@ jobs:
           echo "|---------|---------|" >> changelog_table.md
           # extract lines between "Changelogs" and "return"
           awk '/Changelogs/{flag=1;next}/return/{flag=0}flag' Modules/Version.lua \
-            | sed -E "s/^\s*\['([^']+)'\]\s*=\s*['\"](.*)['\"],?\s*$/| \1 | \2 |/g" >> changelog_table.md
+            | sed -E "s/^\s*\['([^']+)'\]\s*=\s*['\"](.*)['\"],?\s*$/| \1 | \2 |/g" \
+            | sed 's/\\n/<br>/g' \
+            | grep -v '}' >> changelog_table.md
+
           echo "---- debug: generated changelog_table.md ----"
           cat changelog_table.md
           echo "---- end debug ----"
@@ -69,9 +72,7 @@ jobs:
 
           git commit -m "chore: sync changelogs from Version.lua"
 
-          # Make sure local branch is up-to-date before pushing
           echo "Fetching & rebasing on origin/${GITHUB_MAIN_REF}..."
-          # if fetch/rebase fails, abort and surface error (so we can inspect)
           git fetch origin ${GITHUB_MAIN_REF}
           if ! git rebase origin/${GITHUB_MAIN_REF}; then
             echo "Rebase failed — aborting rebase and failing the job so you can resolve manually."
@@ -80,7 +81,6 @@ jobs:
             exit 1
           fi
 
-          # Push the rebased commit (fast-forward)
           git push origin HEAD:${GITHUB_MAIN_REF}
 
       - name: Show final status (for logs)
